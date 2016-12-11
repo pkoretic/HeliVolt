@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/assets">
+        <file>bot_blink_right.png</file>
+        <file>bot_eyes_right.png</file>
+        <file>bot_ball.png</file>
+        <file>background.png</file>
+        <file>tile1.png</file>
+        <file>tile2.png</file>
+        <file>tile3.png</file>
+        <file>music.mp3</file>
+        <file>hit.wav</file>
+    </qresource>
+</RCC>
