@@ -3,9 +3,6 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import QtMultimedia 5.7
 
-import "../icons"
-import "components"
-
 Image
 {
     id: main

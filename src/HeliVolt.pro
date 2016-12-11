@@ -4,15 +4,12 @@ CONFIG += c++14
 
 SOURCES += cpp/main.cpp
 HEADERS += cpp/platform.h
-HEADERS += cpp/fileio.h
 
 RESOURCES += resources.qrc
 
 RESOURCES += qml/qml.qrc
-RESOURCES += qml/components/components.qrc
 
 RESOURCES += fonts/fonts.qrc
-RESOURCES += icons/icons.qrc
 RESOURCES += assets/assets.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model

@@ -57,7 +57,6 @@ ApplicationWindow
 
     // webfont icons | they have to be loaded before rest of qml
     FontLoader { source: "/fonts/digital-7.ttf"  }
-    FontLoader { source: "/icons/ionicons.ttf" }
 
     // main application content
     // in debug mode fetched from http, in production, builtin version is used

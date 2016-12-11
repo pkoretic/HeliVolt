@@ -3,7 +3,6 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 
-#include "fileio.h"
 #include "platform.h"
 
 int main(int argc, char *argv[])
@@ -15,10 +14,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     Platform platform(&engine);
-    FileIO fileio;
 
     // expose C++ classes to QML
-    engine.rootContext()->setContextProperty("__fileio", &fileio);
     engine.rootContext()->setContextProperty("__platform", &platform);
 
     // load main file
