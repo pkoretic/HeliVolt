@@ -111,7 +111,7 @@ Item
             rotator.duration = 100
             rotator.restart()
             upDownAnimation.duration = 1000
-            y = main.height
+            y = main.height - height
         }
 
         function rise ()
