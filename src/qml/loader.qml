@@ -17,6 +17,8 @@ ApplicationWindow
     width: 800
     height: 600
 
+    color: "#000000"
+
     // this is set from main.cpp
     property bool _DEBUG_MODE
 
@@ -48,6 +50,7 @@ ApplicationWindow
         console.log("config:", JSON.stringify(Config, null, 4))
     }
 
+    // persistent settings
     Settings
     {
         id: _settings
@@ -55,8 +58,15 @@ ApplicationWindow
         property int best_score: 0
     }
 
-    // webfont icons | they have to be loaded before rest of qml
+    // digital font
     FontLoader { source: "/fonts/digital-7.ttf"  }
+
+    // background image, always the same
+    Image
+    {
+        anchors.fill: parent
+        source: "../assets/background.png"
+    }
 
     // main application content
     // in debug mode fetched from http, in production, builtin version is used

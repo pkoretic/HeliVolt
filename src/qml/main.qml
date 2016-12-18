@@ -3,135 +3,115 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import QtMultimedia 5.7
 
-Image
+Item
 {
     id: main
 
-    source: "../assets/background.png"
+    enabled: false
 
     property var pages: []
+    property var objects: []
 
     property bool game_started: false
     property bool dropping: true
 
     property int tiles_in_page: 8
-    property int tile_width: (width / tiles_in_page + 1) |0
+    property int tile_width: (width / tiles_in_page)
+    property int wall_height: (main.height * 0.25)
+    property int wall_width: tile_width  / 2
 
     property int distance: 0
 
-    // initialization
-    Component.onCompleted:
-    {
-        if(pages[0])
-            pages[0].destroy()
-
-        if(pages[1])
-            pages[1].destroy()
-
-        pages[0] = null
-        pages[1] = renderPage(0, main.width |0)
-    }
+    Component.onCompleted: enabled = true
 
     // return random number in range
     function makeRandom(min, max)
     {
-        return (Math.random() * (max - min) + min) |0
+        return (Math.random() * (max - min) + min)
     }
 
-    // main render page function
-    function renderPage(from, to)
+    // main render function
+    // renders one item at a time
+    function renderPage()
     {
-        var main_height = main.height |0
-        var min_height = main_height * 0.1 |0
-        var max_height = main_height  * 0.2 |0
+        var min_height = main.height * 0.1
+        var max_height = main.height * 0.2
 
-        var pageRect = pageComponent.createObject(main, { x: from, width: to, height: main_height } )
+        var h = makeRandom(min_height, max_height)
 
-        for(var i = tiles_in_page; i--;)
+        // draw top and botom tile
+        var tile1 = topTileComponent.createObject(main, { x: main.width, width: tile_width, height: h })
+        var tile2 = bottomTileComponent.createObject(main, { x: main.width, width: tile_width, height: h, y: main.height - h })
+
+        // draw wall once a "page"
+        var wall
+        if(distance % 100 === 0)
+            wall = wallComponent.createObject(main, { height: wall_height, width: wall_width, x: main.width, y: makeRandom(max_height, main.height - max_height * 2) })
+
+        // check for collision detection and destroy past objects
+        for(var i = 0; i < objects.length; i++)
         {
-            var h = makeRandom(min_height, max_height)
+            var object = objects[i]
 
-            var x = tile_width * i
-            tile1Component.createObject(pageRect, { height: h, width: tile_width, x: x })
-            tile2Component.createObject(pageRect, { height: h, width: tile_width,  x: x, y: main_height - h })
+            if (object.x < player.x + player.width && object.x + object.width > player.x && object.y < player.y + player.height && object.height + object.y > player.y)
+            {
+                if(distance > _settings.best_score)
+                    _settings.best_score = distance
+
+                loader.reload()
+                break
+            }
+
+            if(object.x === -tile_width)
+            {
+                object.destroy()
+                objects.splice(i, 1)
+                continue
+            }
         }
 
-        if(pages[0])
-            wallComponent.createObject(pageRect, { height: main_height * 0.25, width: tile_width / 2, x: tile_width, y: makeRandom(max_height, main_height - max_height * 2) })
+        // save new objects
+        objects.push(tile1)
+        objects.push(tile2)
+        if(wall) objects.push(wall)
 
-        return pageRect
+        // incrase distance
+        distance += 10
     }
 
     // background music
     Audio
     {
+        id: music
         source: "../assets/music.mp3"
         loops: Audio.Infinite
         autoPlay: true
     }
 
-    Audio
-    {
-        id: effect_hit
-        source: "../assets/hit.wav"
-    }
-
-    //! player
+    // player
     Item
     {
         id: player
 
-        x: (parent.width * 0.2) |0
-        y: (parent.height / 2 - height / 2) |0
+        x: (parent.width * 0.2)
+        y: (parent.height / 2 - height / 2)
 
         height: childrenRect.height
-        width: childrenRect.width |0
+        width: childrenRect.width
 
-        Behavior on y { enabled: game_started; SmoothedAnimation { id: upDownAnimation }}
-
-        // simple collision detection
-        onYChanged:
-        {
-            if(!game_started)
-                return
-
-            page_loop:
-            for(var i = pages.length; --i;)
-            {
-                var page = pages[i]
-                if(!page)
-                    continue
-
-                var children = page.children
-                for(var c = children.length; --c;)
-                {
-                    var child = children[c]
-                    var cords = child.mapToItem(main, 0, 0)
-                    if(cords.x > player.x && cords.x < player.x + player.width && cords.y + child.height >= player.y && cords.y < player.y + height)
-                    {
-                        game_started = false
-                        effect_hit.play()
-
-                        if(distance > _settings.best_score)
-                            _settings.best_score = distance
-
-                        loader.reload()
-                        break page_loop
-                    }
-                }
-            }
-        }
+        Behavior on y { SmoothedAnimation { id: upDownAnimation }}
 
         function drop ()
         {
-            if(dropping && !game_started)
+            if(dropping)
                 return
 
-            animation.duration = 100
-            animation.restart()
             dropping = true
+
+            rotator.duration = 100
+            rotator.restart()
             upDownAnimation.duration = 1000
-            y = main.height |0
+            y = main.height
         }
 
         function rise ()
@@ -139,9 +119,10 @@ Image
             if(!dropping)
                 return
 
-            animation.duration = 500
-            animation.restart()
             dropping = false
+
+            rotator.duration = 500
+            rotator.restart()
             upDownAnimation.duration = 1600
             y = 0
         }
@@ -149,7 +130,7 @@ Image
         Image
         {
             id: head
-            height: main.height * 0.1 |0
+            height: main.height * 0.1
             width: height
             source: "../assets/bot_%1_right.png".arg(dropping ? "blink" : "eyes")
             z: 1
@@ -157,14 +138,14 @@ Image
 
         Image
         {
-            height: main.height * 0.1 |0
+            height: main.height * 0.1
             width: height
             y: height / 3
             source: "../assets/bot_ball.png"
 
             RotationAnimator on rotation
             {
-                id: animation
+                id: rotator
 
                 from: 0
                 to: 360
@@ -173,7 +154,7 @@ Image
         }
     }
 
-    //! overlay information
+    // overlay game information
     Item
     {
         width: parent.width - x * 2
@@ -204,6 +185,7 @@ Image
                 font.bold: true
                 style: Text.Outline
                 text: distance
+                textFormat: Text.PlainText
             }
         }
 
@@ -233,74 +215,56 @@ Image
         }
     }
 
-    //! tile1 component
+    // top tile component
     Component
     {
-        id: tile1Component
+        id: topTileComponent
         Image
         {
-            source: "../assets/tile1.png"
+            source: "../assets/top_tile.png"
+            NumberAnimation on x { duration : 1500; to: -tile_width }
         }
     }
 
-    //! tile2 component
+    // tile2 component
     Component
     {
-        id: tile2Component
+        id: bottomTileComponent
         Image
         {
-            source: "../assets/tile2.png"
+            source: "../assets/bottom_tile.png"
+            NumberAnimation on x { duration : 1500; to: -tile_width }
         }
     }
 
-    //! wall component
+    // wall component
     Component
     {
         id: wallComponent
         Image
         {
-            source: "../assets/tile3.png"
-        }
-    }
-
-    // page holder
-    Component
-    {
-        id: pageComponent
-        Item
-        {
-            Behavior on x { enabled: game_started; NumberAnimation {  duration: 3000 } }
-            onXChanged: ++distance
+            source: "../assets/wall_tile.png"
+            NumberAnimation on x { duration : 1500; to: -tile_width }
         }
     }
 
     // main "level" drawing loop
     Timer
     {
-        interval: 1500
+        interval: 150
         running: game_started
         repeat: true
         triggeredOnStart: true
 
-        onTriggered:
-        {
-            // destroy page that passed
-            if(pages[0])
-                pages[0].destroy()
-
-            // swap pages for new position
-            pages[0] = pages[1]
-            pages[1] = renderPage(main.width |0, main.width * 2 |0)
-
-            // triger pages animation
-            pages[0].x = -main.width * 2 |0
-            pages[1].x = -main.width |0
-        }
+        onTriggered: renderPage()
     }
 
     // keyboard play
     Keys.onPressed:
     {
+        if(event.key !== Qt.Key_Space)
+            return
+
         if(!game_started)
             game_started = true
 
@@ -309,7 +273,14 @@ Image
         event.accepted = true
     }
 
-    Keys.onReleased: player.drop()
+    Keys.onReleased:
+    {
+        if(event.key === Qt.Key_Space)
+        {
+            player.drop()
+            event.accepted = true
+        }
+    }
 
     // mouse/tap play
     MouseArea
@@ -327,11 +298,17 @@ Image
         onReleased: player.drop()
     }
 
-    // overlay information
-    Item
+    // overlay instructions
+    Column
     {
-        anchors.fill: parent
         visible: !game_started
+        height: childrenRect.height
+        width: childrenRect.width
+        anchors.left: player.right
+        anchors.leftMargin: 20
+        anchors.verticalCenter: player.verticalCenter
+        spacing: 5
+
         Text
         {
             id: topInstructionText
@@ -339,7 +316,6 @@ Image
             font.pixelSize: 26
             font.family: "Digital-7"
             text: "TAP OR PRESS ANY KEY TO START"
-            anchors.centerIn: parent
         }
 
         Text
@@ -348,9 +324,21 @@ Image
             font.pixelSize: 20
             font.family: "Digital-7"
             text: "TAP/PRESS KEY AND HOLD TO GO UP\nRELEASE TO GO DOWN"
-            anchors.top: topInstructionText.bottom
-            anchors.topMargin: height
             anchors.right: topInstructionText.right
+            lineHeight: 1.1
+        }
+    }
+
+    // stop music and reload game if gone to background
+    Connections
+    {
+        target: Qt.application
+        onStateChanged:
+        {
+            if(Qt.application.state === Qt.ApplicationActive)
+                loader.reload()
+            else
+                music.stop()
         }
     }
 }

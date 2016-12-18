@@ -7,8 +7,6 @@
 
 int main(int argc, char *argv[])
 {
-//    setenv("QSG_VISUALIZE", "overdraw", 1);
-
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
