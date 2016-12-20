@@ -19,6 +19,8 @@ ApplicationWindow
 
     color: "#000000"
 
+    visibility: Window.FullScreen
+
     // this is set from main.cpp
     property bool _DEBUG_MODE
 
