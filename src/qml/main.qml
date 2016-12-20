@@ -315,7 +315,7 @@ Item
             color: "#3fcdfd"
             font.pixelSize: 26
             font.family: "Digital-7"
-            text: "TAP OR PRESS ANY KEY TO START"
+            text: "TAP OR PRESS SPACE TO START"
         }
 
         Text
@@ -323,7 +323,7 @@ Item
             color: "#44fffe"
             font.pixelSize: 20
             font.family: "Digital-7"
-            text: "TAP/PRESS KEY AND HOLD TO GO UP\nRELEASE TO GO DOWN"
+            text: "TAP/PRESS SPACE AND HOLD TO GO UP\nRELEASE TO GO DOWN"
             anchors.right: topInstructionText.right
             lineHeight: 1.1
         }
