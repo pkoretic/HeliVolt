@@ -75,6 +75,7 @@ Item
         objects.push(tile2)
         if(wall) objects.push(wall)
 
+
         // incrase distance
         distance += 10
     }
@@ -222,7 +223,7 @@ Item
         Image
         {
             source: "../assets/top_tile.png"
-            NumberAnimation on x { duration : 1500; to: -tile_width }
+            NumberAnimation on x { duration : 1800; to: -tile_width }
         }
     }
 
@@ -233,7 +234,7 @@ Item
         Image
         {
             source: "../assets/bottom_tile.png"
-            NumberAnimation on x { duration : 1500; to: -tile_width }
+            NumberAnimation on x { duration : 1800; to: -tile_width }
         }
     }
 
@@ -244,14 +245,14 @@ Item
         Image
         {
             source: "../assets/wall_tile.png"
-            NumberAnimation on x { duration : 1500; to: -tile_width }
+            NumberAnimation on x { duration : 1800; to: -tile_width }
         }
     }
 
     // main "level" drawing loop
     Timer
     {
-        interval: 150
+        interval: 180
         running: game_started
         repeat: true
         triggeredOnStart: true
