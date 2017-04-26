@@ -18,4 +18,4 @@ Point of the game is to go as far as possible without hiting anything.
 
 Level is created from 3 tiles for bottom, top and wall elements.
 
-They are created on the right of the sceen an animated.
+They are created on the right of the sceen and animated.
