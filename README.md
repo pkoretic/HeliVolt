@@ -10,7 +10,7 @@ Classic helicopter game clone using [VoltAir](https://github.com/google/VoltAir)
 
 This is example game made in pure QML.
 
-All logic is for simplicity held in src/main.qml.
+All logic is for simplicity held in `src/qml/main.qml`.
 
 [Google PlayStore](https://play.google.com/store/apps/details?id=io.qaap.helivolt)
 
