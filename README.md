@@ -2,6 +2,12 @@
 
 Classic helicopter game clone using [VoltAir](https://github.com/google/VoltAir) looks and assets.
 
+<br/>
+
+<img src="screenshot.jpg" height="300">
+
+<br/>
+
 This is example game made in pure QML.
 
 All logic is for simplicity held in src/main.qml.
