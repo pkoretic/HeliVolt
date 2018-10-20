@@ -2,7 +2,6 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
-import QtWebSockets 1.0
 import Qt.labs.settings 1.0
 
 import "../config.js" as Config
@@ -91,33 +90,9 @@ ApplicationWindow
             source = ""
             __platform.clearCache()
             source = src
-
-            // restart websocket debug server
-            wsDebugServer.active = false
-            wsDebugServer.active = true
         }
 
         onLoaded: loader.item.forceActiveFocus()
-    }
-
-    // websocket client used for development
-    WebSocket
-    {
-        id: wsDebugServer
-        url: Config.debug.wsurl
-        active: _DEBUG_MODE
-        onStatusChanged:
-        {
-            if(status === WebSocket.Error)
-                console.log("WebSocker error:", errorString)
-        }
-        onTextMessageReceived:
-        {
-            console.log("WebSocket message:", message)
-            var msg = JSON.parse(message)
-            if(msg.action === "reload")
-                loader.reload()
-        }
     }
 
     Label

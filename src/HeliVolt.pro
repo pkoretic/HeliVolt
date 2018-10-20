@@ -38,7 +38,6 @@ android-g++ {
 CONFIG(debug, debug|release) {
     message("debug mode")
     DEFINES += DEBUG
-    QT += websockets
 } else
 {
     message("release mode")
