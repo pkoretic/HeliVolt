@@ -1,7 +1,7 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
+import QtQuick 2.11
+import QtQuick.Controls 2.4
+import QtQuick.Layouts 1.11
+import QtQuick.Window 2.11
 import Qt.labs.settings 1.0
 
 import "../config.js" as Config
