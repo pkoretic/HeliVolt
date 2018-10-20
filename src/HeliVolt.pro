@@ -1,6 +1,6 @@
 QT += qml quick quickcontrols2 multimedia
 
-CONFIG += c++14
+CONFIG += c++14 qtquickcompiler
 
 SOURCES += cpp/main.cpp
 HEADERS += cpp/platform.h
