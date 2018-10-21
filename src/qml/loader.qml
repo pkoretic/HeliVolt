@@ -23,28 +23,8 @@ ApplicationWindow
     // this is set from main.cpp
     property bool _DEBUG_MODE
 
-    // main signal for opening module
-    signal intent(string action, var extras)
-
-    property bool _landscape: Screen.orientation === Qt.LandscapeOrientation
-
-    function setOrientationListener(listeners)
-    {
-        if(listeners === undefined)
-            listeners = Qt.LandscapeOrientation  | Qt.PortraitOrientation
-
-        Screen.orientationUpdateMask = listeners
-    }
-
-    function unsetOrientationListener()
-    {
-        Screen.orientationUpdateMask = 0
-    }
-
     Component.onCompleted:
     {
-        setOrientationListener()
-
         if (_DEBUG_MODE)
             console.log("DEBUG MODE")
 
@@ -118,5 +98,4 @@ ApplicationWindow
         enabled: errorMessage.enabled
         visible: enabled
     }
-
 }
